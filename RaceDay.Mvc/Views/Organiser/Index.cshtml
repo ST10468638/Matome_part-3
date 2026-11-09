@@ -1,0 +1,40 @@
+@model IReadOnlyCollection<EventSummaryViewModel>
+@{
+    ViewData["Title"] = "Organiser dashboard";
+    var upcoming = Model.Count(item => item.Event.EventDate.Date >= DateTime.Now.Date);
+    var totalEnrolments = Model.Sum(item => item.TotalEnrolments);
+}
+<div class="page-heading d-flex flex-column flex-md-row align-items-md-end justify-content-between gap-3 mb-4">
+    <div><p class="eyebrow">ORGANISER SPACE</p><h1>Dashboard</h1><p class="text-muted mb-0">A clear view of your events and the people taking part.</p></div>
+    <a asp-action="CreateEvent" class="btn btn-primary"><span class="me-1">+</span> Create event</a>
+</div>
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-xl-4"><div class="stat-card"><span>Events created</span><strong>@Model.Count</strong><small>Across your RaceDay account</small></div></div>
+    <div class="col-sm-6 col-xl-4"><div class="stat-card"><span>Total enrolments</span><strong>@totalEnrolments</strong><small>Confirmed participant places</small></div></div>
+    <div class="col-sm-6 col-xl-4"><div class="stat-card"><span>Upcoming events</span><strong>@upcoming</strong><small>Events scheduled from today</small></div></div>
+</div>
+<div class="content-panel">
+    <div class="panel-heading"><div><p class="eyebrow">YOUR EVENTS</p><h2>Event overview</h2></div><a asp-action="Events" class="btn btn-outline-primary btn-sm">Manage events</a></div>
+    @if (!Model.Any())
+    {
+        <div class="empty-state compact"><h3>No events yet</h3><p>Create your first event to start taking enrolments.</p><a asp-action="CreateEvent" class="btn btn-primary">Create an event</a></div>
+    }
+    else
+    {
+        <div class="table-responsive"><table class="table align-middle table-hover">
+            <thead><tr><th>Event</th><th>Event date</th><th>Enrolments</th><th>Status</th><th class="text-end">Manage</th></tr></thead>
+            <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td><strong>@item.Event.EventName</strong><div class="small text-muted">@item.Event.Venue, @item.Event.City</div></td>
+                    <td>@item.Event.EventDate.ToString("dd MMM yyyy")</td>
+                    <td><span class="count-pill">@item.TotalEnrolments</span></td>
+                    <td>@if (item.Event.EventDate.Date >= DateTime.Now.Date) { <span class="status-badge status-upcoming">Upcoming</span> } else { <span class="status-badge status-complete">Completed</span> }</td>
+                    <td class="text-end"><a asp-action="Enrolments" asp-route-eventId="@item.Event.EventId" class="table-action">Enrolments</a></td>
+                </tr>
+            }
+            </tbody>
+        </table></div>
+    }
+</div>

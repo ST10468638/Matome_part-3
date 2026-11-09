@@ -1,0 +1,20 @@
+@model IReadOnlyCollection<EnrolmentDto>
+@{
+    ViewData["Title"] = "My enrolments";
+}
+<div class="page-heading mb-4"><p class="eyebrow">YOUR RACE CALENDAR</p><h1>My enrolments</h1><p class="text-muted">Track the events you have joined and the status of each place.</p></div>
+<div class="content-panel">
+    @if (!Model.Any())
+    {
+        <div class="empty-state"><h3>You have no enrolments yet</h3><p>Browse upcoming events and choose a category to get started.</p><a asp-controller="Home" asp-action="Index" class="btn btn-primary">Find an event</a></div>
+    }
+    else
+    {
+        <div class="table-responsive"><table class="table align-middle"><thead><tr><th>Event</th><th>Category</th><th>Enrolment date</th><th>Bib number</th><th>Status</th></tr></thead><tbody>
+        @foreach (var item in Model)
+        {
+            <tr><td><strong>@item.EventName</strong><div><a asp-action="Details" asp-route-id="@item.EventId" class="small">View event</a></div></td><td>@item.CategoryName</td><td>@item.EnrolmentDate.ToString("dd MMM yyyy")</td><td>@(item.BibNumber ?? "Not allocated")</td><td><span class="status-badge @(item.Status == "Confirmed" ? "status-confirmed" : item.Status == "Pending" ? "status-pending" : "status-neutral")">@item.Status</span></td></tr>
+        }
+        </tbody></table></div>
+    }
+</div>

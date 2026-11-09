@@ -1,0 +1,20 @@
+@model IReadOnlyCollection<ResultDto>
+@{
+    ViewData["Title"] = "My results";
+}
+<div class="page-heading mb-4"><p class="eyebrow">YOUR RACE HISTORY</p><h1>My results</h1><p class="text-muted">See your results after the event organiser has published them.</p></div>
+<div class="content-panel">
+    @if (!Model.Any())
+    {
+        <div class="empty-state"><h3>No results have been published</h3><p>Your completed event results will appear here once the organiser records them.</p><a asp-controller="Home" asp-action="Index" class="btn btn-primary">Explore events</a></div>
+    }
+    else
+    {
+        <div class="table-responsive"><table class="table align-middle"><thead><tr><th>Event</th><th>Event date</th><th>Category</th><th>Finish time</th><th>Finishing position</th><th>Status</th></tr></thead><tbody>
+        @foreach (var item in Model.OrderByDescending(result => result.EventDate))
+        {
+            <tr><td><strong>@item.EventName</strong></td><td>@item.EventDate.ToString("dd MMM yyyy")</td><td>@item.CategoryName</td><td>@(item.FinishTime?.ToString(@"hh\:mm\:ss") ?? "—")</td><td>@item.PositionDisplay</td><td><span class="status-badge @(item.ResultStatus == "Finished" ? "status-confirmed" : "status-neutral")">@item.ResultStatus</span></td></tr>
+        }
+        </tbody></table></div>
+    }
+</div>

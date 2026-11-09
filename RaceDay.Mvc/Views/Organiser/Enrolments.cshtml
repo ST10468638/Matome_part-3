@@ -1,0 +1,23 @@
+@model IReadOnlyCollection<EnrolmentDto>
+@{
+    var eventItem = (EventDto)ViewBag.Event;
+    ViewData["Title"] = "Event enrolments";
+}
+<div class="page-heading mb-4"><p class="eyebrow">PARTICIPANT LIST</p><h1>@eventItem.EventName</h1><p class="text-muted">Participants enrolled in this event and their selected categories.</p></div>
+<div class="content-panel">
+    <div class="panel-heading"><div><h2>Enrolments</h2><p class="text-muted mb-0">@Model.Count participant record(s)</p></div><a asp-action="Results" asp-route-eventId="@eventItem.EventId" class="btn btn-primary btn-sm">Enter results</a></div>
+    @if (!Model.Any())
+    {
+        <div class="empty-state compact"><h3>No enrolments yet</h3><p>Enrolments will appear here once participants register.</p></div>
+    }
+    else
+    {
+        <div class="table-responsive"><table class="table align-middle"><thead><tr><th>Participant</th><th>Category</th><th>Enrolled</th><th>Bib number</th><th>Status</th></tr></thead><tbody>
+        @foreach (var item in Model)
+        {
+            <tr><td><strong>@item.ParticipantName</strong><div class="small text-muted">Participant #@item.ParticipantId</div></td><td>@item.CategoryName</td><td>@item.EnrolmentDate.ToString("dd MMM yyyy")</td><td>@(item.BibNumber ?? "—")</td><td><span class="status-badge @(item.Status == "Confirmed" ? "status-confirmed" : item.Status == "Pending" ? "status-pending" : "status-neutral")">@item.Status</span></td></tr>
+        }
+        </tbody></table></div>
+    }
+    <a asp-action="Events" class="btn btn-outline-secondary btn-sm mt-3">Back to events</a>
+</div>

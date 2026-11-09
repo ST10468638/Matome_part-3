@@ -1,0 +1,24 @@
+@model CategoryFormViewModel
+@{
+    var isEdit = Model.CategoryId > 0;
+    ViewData["Title"] = isEdit ? "Edit category" : "Add category";
+}
+<div class="page-heading mb-4"><p class="eyebrow">EVENT CATEGORIES</p><h1>@(isEdit ? "Edit category" : "Add a category")</h1><p class="text-muted">Configure participant eligibility and the entry fee.</p></div>
+<div class="content-panel form-panel">
+    <form asp-action="@(isEdit ? "EditCategory" : "CreateCategory")" asp-route-eventId="@Model.EventId" asp-route-categoryId="@Model.CategoryId" method="post" novalidate>
+        <input asp-for="EventId" type="hidden" /><input asp-for="CategoryId" type="hidden" />
+        <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+        <div class="row g-3">
+            <div class="col-md-8"><label asp-for="CategoryName" class="form-label"></label><input asp-for="CategoryName" class="form-control" /><span asp-validation-for="CategoryName" class="text-danger small"></span></div>
+            <div class="col-md-4"><label asp-for="CategoryType" class="form-label"></label><select asp-for="CategoryType" class="form-select" id="CategoryType"><option value="Age">Age</option><option value="Distance">Distance</option></select><span asp-validation-for="CategoryType" class="text-danger small"></span></div>
+            <div class="col-12"><label asp-for="Description" class="form-label"></label><textarea asp-for="Description" rows="2" class="form-control"></textarea><span asp-validation-for="Description" class="text-danger small"></span></div>
+            <div class="col-md-6" data-category-age><label asp-for="MinimumAge" class="form-label"></label><input asp-for="MinimumAge" type="number" min="0" max="120" class="form-control" /><span asp-validation-for="MinimumAge" class="text-danger small"></span></div>
+            <div class="col-md-6" data-category-age><label asp-for="MaximumAge" class="form-label"></label><input asp-for="MaximumAge" type="number" min="0" max="120" class="form-control" /><span asp-validation-for="MaximumAge" class="text-danger small"></span></div>
+            <div class="col-md-6 d-none" data-category-distance><label asp-for="DistanceKm" class="form-label"></label><div class="input-group"><input asp-for="DistanceKm" type="number" min="0.01" step="0.01" class="form-control" /><span class="input-group-text">km</span></div><span asp-validation-for="DistanceKm" class="text-danger small"></span></div>
+            <div class="col-md-6"><label asp-for="EntryFee" class="form-label"></label><div class="input-group"><span class="input-group-text">R</span><input asp-for="EntryFee" type="number" min="0" step="0.01" class="form-control" /></div><span asp-validation-for="EntryFee" class="text-danger small"></span></div>
+            <div class="col-md-6"><label asp-for="Capacity" class="form-label"></label><input asp-for="Capacity" type="number" min="1" class="form-control" /><span asp-validation-for="Capacity" class="text-danger small"></span></div>
+        </div>
+        <div class="d-flex gap-2 mt-4"><button type="submit" class="btn btn-primary">@(isEdit ? "Save category" : "Add category")</button><a asp-action="Categories" asp-route-eventId="@Model.EventId" class="btn btn-outline-secondary">Cancel</a></div>
+    </form>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

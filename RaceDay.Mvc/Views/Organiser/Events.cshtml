@@ -1,0 +1,44 @@
+@model IReadOnlyCollection<EventDto>
+@{
+    ViewData["Title"] = "My events";
+}
+<div class="page-heading d-flex flex-column flex-md-row align-items-md-end justify-content-between gap-3 mb-4">
+    <div><p class="eyebrow">EVENT MANAGEMENT</p><h1>My events</h1><p class="text-muted mb-0">Create, update and manage your RaceDay events.</p></div>
+    <a asp-action="CreateEvent" class="btn btn-primary">Create event</a>
+</div>
+<div class="content-panel">
+    @if (!Model.Any())
+    {
+        <div class="empty-state"><h3>Your event list is empty</h3><p>Start by creating an event for your participants.</p><a asp-action="CreateEvent" class="btn btn-primary">Create an event</a></div>
+    }
+    else
+    {
+        <div class="table-responsive"><table class="table align-middle table-hover">
+            <thead><tr><th>Event</th><th>Activity</th><th>Date</th><th>Distance</th><th class="text-end">Actions</th></tr></thead>
+            <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td><div class="d-flex align-items-center gap-3">
+                        @if (!string.IsNullOrWhiteSpace(item.BannerImageUrl)) { <img src="@item.BannerImageUrl" class="mini-banner" alt="" /> } else { <span class="mini-banner-placeholder">R</span> }
+                        <div><strong>@item.EventName</strong><div class="small text-muted">@item.City, @item.Province</div></div>
+                    </div></td>
+                    <td>@item.EventType</td><td>@item.EventDate.ToString("dd MMM yyyy")</td><td>@item.DistanceKm.ToString("0.##") km</td>
+                    <td class="text-end">
+                        <div class="action-links">
+                            <a asp-action="EditEvent" asp-route-id="@item.EventId">Edit</a>
+                            <a asp-action="Categories" asp-route-eventId="@item.EventId">Categories</a>
+                            <a asp-action="Enrolments" asp-route-eventId="@item.EventId">Enrolments</a>
+                            <a asp-action="Results" asp-route-eventId="@item.EventId">Results</a>
+                            <form asp-action="DeleteEvent" method="post" onsubmit="return confirm('Delete this event? This cannot be undone.');">
+                                <input type="hidden" name="id" value="@item.EventId" />
+                                <button type="submit" class="link-danger-button">Delete</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table></div>
+    }
+</div>

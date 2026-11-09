@@ -1,0 +1,45 @@
+@model IReadOnlyCollection<EnrolmentDto>
+@{
+    var eventItem = (EventDto)ViewBag.Event;
+    ViewData["Title"] = "Enter results";
+}
+<div class="page-heading mb-4"><p class="eyebrow">RACE RESULTS</p><h1>@eventItem.EventName</h1><p class="text-muted">Record participants' finish times and positions after the event has concluded.</p></div>
+<div class="content-panel">
+    @{ var eventConcluded = eventItem.EventDate <= DateTime.Now; }
+    @if (!eventConcluded)
+    {
+        <div class="alert alert-warning">This event is scheduled for @eventItem.EventDate.ToString("dd MMM yyyy"). Results can be entered after the event concludes.</div>
+    }
+    @if (!Model.Any())
+    {
+        <div class="empty-state compact"><h3>No participants to score</h3><p>Participant enrolments will be listed here.</p></div>
+    }
+    else
+    {
+        <div class="table-responsive"><table class="table align-middle"><thead><tr><th>Participant</th><th>Category</th><th>Existing result</th><th>Record result</th></tr></thead><tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td><strong>@item.ParticipantName</strong><div class="small text-muted">@item.BibNumber</div></td>
+                <td>@item.CategoryName</td>
+                <td>@if (item.ResultId.HasValue) { <span class="status-badge status-confirmed">@item.ResultStatus</span><div class="small text-muted">@item.FinishTime · Position @item.OverallPosition</div> } else { <span class="text-muted small">Not recorded</span> }</td>
+                <td>
+                    @if (!item.ResultId.HasValue && eventConcluded)
+                    {
+                        <form asp-action="RecordResult" method="post" class="result-entry-form">
+                            <input type="hidden" name="EnrolmentId" value="@item.EnrolmentId" />
+                            <input type="hidden" name="eventId" value="@eventItem.EventId" />
+                            <select name="ResultStatus" class="form-select form-select-sm" aria-label="Result status"><option value="Finished">Finished</option><option value="DNF">Did not finish</option><option value="DNS">Did not start</option><option value="Disqualified">Disqualified</option></select>
+                            <input name="FinishTime" type="time" step="1" class="form-control form-control-sm" aria-label="Finish time" />
+                            <input name="OverallPosition" type="number" min="1" class="form-control form-control-sm" placeholder="Overall position" aria-label="Overall position" />
+                            <input name="CategoryPosition" type="number" min="1" class="form-control form-control-sm" placeholder="Category position" aria-label="Category position" />
+                            <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+        </tbody></table></div>
+    }
+    <a asp-action="Events" class="btn btn-outline-secondary btn-sm mt-3">Back to events</a>
+</div>

@@ -1,0 +1,33 @@
+@model IReadOnlyCollection<CategoryDto>
+@{
+    var eventItem = (EventDto)ViewBag.Event;
+    ViewData["Title"] = "Manage categories";
+}
+<div class="page-heading d-flex flex-column flex-md-row align-items-md-end justify-content-between gap-3 mb-4">
+    <div><p class="eyebrow">CATEGORY MANAGEMENT</p><h1>@eventItem.EventName</h1><p class="text-muted mb-0">Set up the age and distance groups available to participants.</p></div>
+    <a asp-action="CreateCategory" asp-route-eventId="@eventItem.EventId" class="btn btn-primary">Add category</a>
+</div>
+<div class="content-panel">
+    @if (!Model.Any())
+    {
+        <div class="empty-state"><h3>No categories have been added</h3><p>Add an age group or a distance category for this event.</p><a asp-action="CreateCategory" asp-route-eventId="@eventItem.EventId" class="btn btn-primary">Add category</a></div>
+    }
+    else
+    {
+        <div class="table-responsive"><table class="table align-middle table-hover">
+            <thead><tr><th>Category</th><th>Type</th><th>Entry fee</th><th>Capacity</th><th class="text-end">Actions</th></tr></thead>
+            <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td><strong>@item.CategoryName</strong><div class="small text-muted">@item.Description</div></td>
+                    <td>@if (item.CategoryType == "Age") { <span>@item.MinimumAge–@item.MaximumAge years</span> } else { <span>@item.DistanceKm km</span> }</td>
+                    <td>R @item.EntryFee.ToString("N2")</td><td>@item.Capacity</td>
+                    <td class="text-end"><div class="action-links justify-content-end"><a asp-action="EditCategory" asp-route-eventId="@eventItem.EventId" asp-route-categoryId="@item.CategoryId">Edit</a><form asp-action="DeleteCategory" method="post" onsubmit="return confirm('Delete this category?');"><input type="hidden" name="eventId" value="@eventItem.EventId" /><input type="hidden" name="categoryId" value="@item.CategoryId" /><button type="submit" class="link-danger-button">Delete</button></form></div></td>
+                </tr>
+            }
+            </tbody>
+        </table></div>
+    }
+    <a asp-action="Events" class="btn btn-outline-secondary btn-sm mt-3">Back to events</a>
+</div>
