@@ -1,0 +1,18 @@
+## Visual Studio
+.vs/
+*.user
+*.suo
+*.cache
+
+## .NET build output
+**/bin/
+**/obj/
+
+## Local secrets and configuration
+secrets.json
+.env
+.env.*
+
+## Test output
+TestResults/
+coverage/
