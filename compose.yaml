@@ -1,0 +1,26 @@
+services:
+  raceday-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_HTTP_PORTS: "8081"
+      ConnectionStrings__RaceDayConnection: "${RACEDAY_SQL_CONNECTION:?Set RACEDAY_SQL_CONNECTION in .env}"
+      AzureBlobStorage__ConnectionString: "${AZURE_BLOB_CONNECTION:-}"
+      Registration__OrganiserInviteCode: "${RACEDAY_ORGANISER_INVITE_CODE:?Set RACEDAY_ORGANISER_INVITE_CODE in .env}"
+    ports:
+      - "8081:8081"
+
+  raceday-mvc:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_HTTP_PORTS: "8080"
+      ApiSettings__BaseUrl: "http://raceday-api:8081/"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - raceday-api
