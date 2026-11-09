@@ -89,6 +89,8 @@ Open `http://localhost:8080`. The API and SQL Server must remain available on th
 ## 6. GitHub Actions
 
 The workflow in `.github/workflows/dotnet.yml` runs on pushes, pull requests and manual dispatch. It restores and builds `RaceDay.sln`, which includes both the API and MVC projects, then runs the API integration tests. After pushing the Part 3 changes, check the Actions tab and keep a genuine screenshot of a successful Part 3 workflow run for the submission README/evidence requirement.
+<img width="1439" height="157" alt="image" src="https://github.com/user-attachments/assets/eaa7b5ca-9ec7-474e-93b2-92c61e839c73" />
+
 
 ## 7. Demonstration video and submission checklist
 
