@@ -96,7 +96,8 @@ The workflow in `.github/workflows/dotnet.yml` runs on pushes, pull requests and
 
 Replace the placeholder below with the URL of your own unlisted YouTube demonstration after recording the running application, MVC structure, Azure Blob Storage flow and Docker run.
 
-**Unlisted YouTube demonstration:** `ADD_YOUR_UNLISTED_PART_3_YOUTUBE_URL_HERE`
+**Unlisted YouTube demonstration:** 
+https://youtu.be/7AnmeJeoliE
 
 Before submitting, make sure that you have:
 
