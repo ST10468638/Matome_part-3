@@ -1,0 +1,29 @@
+﻿name: RaceDay Part 3 CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build and test RaceDay
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore solution
+        run: dotnet restore RaceDay.sln
+
+      - name: Build solution
+        run: dotnet build RaceDay.sln --configuration Release --no-restore
+
+      - name: Run API tests
+        run: dotnet test RaceDay.sln --configuration Release --no-build --no-restore --verbosity normal
